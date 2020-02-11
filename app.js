@@ -3,6 +3,9 @@ const app = express()
 const port = process.env.PORT || 3000
 app.set('view engine', 'pug')
 
+app.get('/api/time', function(req, res){
+	res.send({currentTime: Date.now()});
+})
 
 app.get('/page2', function (req, res) {
 	console.log(req);

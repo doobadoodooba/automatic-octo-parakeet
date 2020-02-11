@@ -19,72 +19,9 @@ body{
 	color: $text;
 	max-width: 90%;
 	padding: 2em 3em;
-	background: rgba(0, 0, 0, 0.4);
+	//background: rgba(0, 0, 0, 0.4);
 	text-shadow: 0px 0px 2px #131415;
 	font-family: 'Open Sans', sans-serif;
 }
 
-.overlay {
-  position: relative;
-}
 
-.banner-text{
-	width: 100%;
-	position: absolute;
-	padding: 40px 15px;
-	text-transform: uppercase;
-
-	
-
-}
-
-.navi {
-    text-decoration: none;
-	color: #7700FF;
-	
-	
-
-
-
-
-
-}
-.navi2 {
-    text-decoration: none;
-	color: #A191D6;
-	
-	
-}
-.navi3 {
-    text-decoration: none;
-	color: #A191D6;
-	
-	
-}
-.navi4 {
-    text-decoration: none;
-	color: #A191D6;
-	
-	
-}
-.banner-text ul{
-	height: 50px;
-	text-align: center;
-}
-
-li {
-    display: inline-block;
-	
-	width: 20%;
-}
-
-ul li.active a {
-	background: #262626;
-	color: #fff;
-}
-
-.banner-text h2 {
-	text-align: center;
-	front-size: 50px;
-	margin-top: 20%;
-}
