@@ -1,0 +1,16 @@
+{
+  "name": "3_htmlo",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "Express": "^3.0.1",
+    "express": "^4.17.1",
+    "pug": "^2.0.4"
+  },
+  "description": ""
+}
