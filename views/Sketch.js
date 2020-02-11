@@ -4,7 +4,7 @@ var timerTime = setInterval(display_ct, 60000);
 
 async function display_ct(){
 
-		const api_url = `http://worldtimeapi.org/api/ip`;
+		const api_url = `https://worldtimeapi.org/api/ip`;
 		const response = await fetch(api_url);
 		const json = await response.json();
 		
