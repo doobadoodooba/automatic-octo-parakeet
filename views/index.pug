@@ -1,2 +1,47 @@
-include header.pug
-	h1 message
+doctype html
+html
+  head
+	
+   link(href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", rel="stylesheet", crossorigin="anonymous")
+   script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+   script(src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js")
+   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js", crossorigin="anonymous")
+  style
+   include style.css
+      
+	  
+
+body
+nav.navbar.navbar-expand-lg.navbar-light.bg-light
+  button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarTogglerDemo03', aria-controls='navbarTogglerDemo03', aria-expanded='false', aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  a.navbar-brand(href='#') Navbar
+  #navbarTogglerDemo03.collapse.navbar-collapse
+    ul.navbar-nav.mr-auto.mt-2.mt-lg-0
+      li.nav-item.active
+        a.nav-link(href='#')
+          | Home 
+          span.sr-only (current)
+      li.nav-item
+        a.nav-link(href='#') Link
+      li.nav-item
+        a.nav-link.disabled(href='#', tabindex='-1', aria-disabled='true') Disabled
+    form.form-inline.my-2.my-lg-0
+      input.form-control.mr-sm-2(type='search', placeholder='Search', aria-label='Search')
+      button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+
+div(class='jumbotron vertical-center')
+ 
+  h1 Login
+  br
+  div.input-group.input-group-lg
+  
+   div.input-group-prepend
+   center
+    input.form-control#username(type='text', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Username')
+    input.form-control#password(type='password', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Password')
+    br
+  
+  input.btn-outline-secondary(type='button', value='sign in', onClick='clicked()')
+script
+ include js/main.js
