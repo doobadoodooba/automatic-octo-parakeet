@@ -120,8 +120,8 @@ app.get('/profil', redirectLogin, (req, res) => {
 
 
 //RegisterPage
-app.get('/register',redirectHome, (req, res) => {
-  res.render('register', { title: 'Hey', message: "hello" })
+app.get('/Register',redirectHome, (req, res) => {
+  res.render('Register', { title: 'Hey', message: "hello" })
 })
 
 //LoginPage
@@ -201,7 +201,7 @@ try{
 })
 
 //registerUser
-app.post('/register', (req, res) => {
+app.post('/Register', (req, res) => {
 
 		try{
 			//getsUserPAGE
