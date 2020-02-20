@@ -9,7 +9,7 @@ const errorElement = document.getElementById('error')
 form.addEventListener('submit', (e) =>{
 
   let messages = []
-
+  //name section_____________________________________________
   if (name.value === '' || name.value == null){
     messages.push('Name is required')
   }
@@ -23,6 +23,7 @@ form.addEventListener('submit', (e) =>{
     console.log(name.value)
   }
 
+  // password section_______________________________________
   if(password.value >= 20 || password.value <= 6){
     messages.push('Password needs at least 1 letter \n')
     console.log(password.value)
@@ -36,6 +37,16 @@ form.addEventListener('submit', (e) =>{
     messages.push('Password cannot be 123456 \n')
   }
 
+  if (password.value.search(/[a-z]/) == -1) {
+    messages.push('Your password needs at least one lower case letter. \n')
+
+  }
+
+  if (password.value.search(/[A-Z]/) == -1) {
+    messages.push('Your password needs at least one upper case letter. \n')
+  }
+
+  // email section_________________________________________
   if(email.value ===''|| email.value == null){
     messages.push('Email is required \n')
   }
@@ -43,20 +54,20 @@ form.addEventListener('submit', (e) =>{
   if(email.value >=50 || email.value <= 4){
     messages.push('Email must be longer than 4 \n')
   }
-  if(email.value.indexOf("@", 0) < 0){
+  if(email.value.indexOf("@", 0) < 0 || email.value.indexOf(".", 0) < 0) {
     messages.push('False Email address \n')
   }
 
 
   if (messages.length > 0){
     e.preventDefault()
-    errorElement.innerText = messages.join(', ')
+    errorElement.innerText = messages.join(' ')
   } else {
     setTimeout(function(){
        window.stop(1);
        messages.push('User already exists !')
        e.preventDefault()
-       errorElement.innerText = messages.join(', ')
+       errorElement.innerText = messages.join(' ')
     }, 5000);
 
 

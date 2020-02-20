@@ -21,21 +21,21 @@ html
 		div.jumbotron 
 				div(class='container')
 					div(class="row justify-content-md-right")
-						div(class="col col-lg-2")
+						div
 								h1 Registeration
 								br
+								p(style="font-size:60%;").text-danger#error
 								form(action='/Register' id='form' method='POST')
-									h6.text-danger#error
 									div.form-group
 										div.col-lg-20
 											lable(for='username')
-												input.form-control#username(type='text', name='username', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Username' required)
+												input.form-control#username(type='text', name='username', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Username')
 												br
 												lable(for='email')
-												input.form-control#email(type='text', name='email', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Email' value='' required)
+												input.form-control#email(type='text', name='email', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Email' value='')
 												br
 												lable(for='password')
-												input.form-control#password(type='password', name='password', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Password' required)
+												input.form-control#password(type='password', name='password', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Password')
 												br
 												input.btn.btn-outline-success.my-2.my-sm-0#Register(type='submit', value='Sign up')
 										
