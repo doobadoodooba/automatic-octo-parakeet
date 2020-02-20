@@ -1,0 +1,45 @@
+doctype html
+html
+	head
+		link(href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", rel="stylesheet", crossorigin="anonymous")
+		script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+		script(src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js")
+		script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js", crossorigin="anonymous")
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		style
+			include style.css
+		
+	body
+		nav.navbar.navbar-expand-lg.navbar-light.bg-light
+			button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarTogglerDemo03', aria-controls='navbarTogglerDemo03', aria-expanded='false', aria-label='Toggle navigation')
+				span.navbar-toggler-icon
+			a.navbar-brand(href='#') PuruPuru
+			#navbarTogglerDemo03.collapse.navbar-collapse
+				ul.navbar-nav.mr-auto.mt-2.mt-lg-0
+				div.form-inline.my-2.my-lg-0
+					button.btn.btn-outline-success.my-2.my-sm-0(onclick="window.location.href='/login'") Login
+		div.jumbotron 
+				div(class='container')
+					div(class="row justify-content-md-right")
+						div(class="col col-lg-2")
+								h1 Registeration
+								br
+								form(action='/register' id='form' method='POST')
+									h6.text-danger#error
+									div.form-group
+										div.col-lg-20
+											lable(for='username')
+												input.form-control#username(type='text', name='username', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Username' required)
+												br
+												lable(for='email')
+												input.form-control#email(type='text', name='email', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Email' value='' required)
+												br
+												lable(for='password')
+												input.form-control#password(type='password', name='password', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Password' required)
+												br
+												input.btn.btn-outline-success.my-2.my-sm-0#Register(type='submit', value='Sign up')
+										
+script 
+										 
+	include js/vali2.js					
+									
