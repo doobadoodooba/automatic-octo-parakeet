@@ -5,7 +5,7 @@ if(process.env.NODE_ENV !=='production'){
 const TWO_HOURS = 1000 * 60 * 60 * 2
 
 // SetsPort
-const port2 = process.env.PORT || 3000
+const port2 =  3000
 const port = process.env.PORT || 4000
 const{
 	SESS_SECRET = process.env.SESSION_SECRET,
