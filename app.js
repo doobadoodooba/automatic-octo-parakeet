@@ -5,8 +5,8 @@ if(process.env.NODE_ENV !=='production'){
 const TWO_HOURS = 1000 * 60 * 60 * 2
 
 // SetsPort
-const port2 =  3000
-const port = process.env.PORT || 4000
+const port2 = process.env.PORT || 3000
+const port = 4000
 const{
 	SESS_SECRET = process.env.SESSION_SECRET,
 	SESS_LIFETIME = TWO_HOURS,
@@ -51,7 +51,7 @@ app.use(cookieParser());
 mongoose.connect(process.env.DATABASE_URL,{useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false})
 const db = mongoose.connection
 db.on('error', error => console.error(error))
-db.once('open', () => console.log('MONGOOSE OK!'))
+db.once('open', () => console.log('MONGOOSE OK'))
 
 //mongos DB creater
 const schema = new mongoose.Schema({ username: 'string', password: 'string', email: 'string' });
@@ -60,6 +60,7 @@ let Account = mongoose.model('Account', schema);
 
 //Authentication Packages
 const sessionMiddleware = session({
+	//store: new RedisStore({}),
 	key: 'user_sid',
 	secret: SESS_SECRET,
 	resave: false,
