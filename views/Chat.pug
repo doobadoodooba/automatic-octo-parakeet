@@ -1,0 +1,59 @@
+doctype html
+html
+  head
+	
+   link(href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", rel="stylesheet", crossorigin="anonymous")
+   script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+   script(src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js")
+   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js", crossorigin="anonymous")
+   script(src="/socket.io/socket.io.js")
+   script var socket = io();
+   meta(name='viewport', content='width=device-width, initial-scale=1')
+  style
+   include style.css
+      
+	  
+
+  body
+          nav.navbar.navbar-expand-lg.navbar-light.bg-light
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarTogglerDemo03', aria-controls='navbarTogglerDemo03', aria-expanded='false', aria-label='Toggle navigation')
+              span.navbar-toggler-icon
+            a.navbar-brand(href='#') PuruPuru
+            #navbarTogglerDemo03.collapse.navbar-collapse
+              ul.navbar-nav.mr-auto.mt-2.mt-lg-0
+                li.nav-item
+                  a.nav-link(href='/home')
+                    | Home 
+                    span.sr-only (current)
+                li.nav-item
+                  a.nav-link(href='/profil') Profil
+                li.nav-item.active
+                  a.nav-link.disabled(href='/Chat', tabindex='-1', aria-disabled='false') Chat
+              div.form-inline.my-2.my-lg-0
+                
+                button.btn.btn-outline-success.my-2.my-sm-0(onclick="window.location.href='/logout'") Logout
+          div(class='jumbotron')
+                  div(class="")
+                    h1 PuruPuru CHAT
+                    p.thaus#user #{user} 
+                  
+                    div.div1
+                      div(class="chatConteriner" id="chatConteriner" )
+                        div#user-list
+                          div#message-container
+                      
+                    div(class='jumbotron')
+                      form(action='' id='send-container')
+                        input.inputChat#message-input(type='text')
+                        input.btn.btn-outline-success.my-2.my-sm-0(type='submit', value='Send')
+                        script (src="https://cdn.socket.io/socket.io-1.2.0.js")
+                        script (src="https://code.jquery.com/jquery-1.11.1.js")
+                    
+                        p.thaus#userOn(align="") 
+                      
+                        
+                    
+
+              
+script         
+  include js/ca.js

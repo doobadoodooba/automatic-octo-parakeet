@@ -1,6 +1,17 @@
 if(process.env.NODE_ENV !=='production'){
 	require('dotenv/config')
 }
+// time until session expires
+const TWO_HOURS = 1000 * 60 * 60 * 2
+
+// SetsPort
+const port2 = process.env.PORT || 3000
+const port = process.env.PORT || 4000
+const{
+	SESS_SECRET = process.env.SESSION_SECRET,
+	SESS_LIFETIME = TWO_HOURS,
+	SESS_NAME = 'sid',
+} = process.env
 
 //required
 const express = require('express')
@@ -12,17 +23,16 @@ const flash =require('express-flash')
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+http.listen(port2, () => console.log(`SOCKET IO listening on port ${port2}!`))
 
-// time until session expires
-const TWO_HOURS = 1000 * 60 * 60 * 2
+//adding  sessionmiddleware
+io.use(function(socket, next) {
+    sessionMiddleware(socket.request, socket.request.res, next);
+});
 
-// SetsPort
-const port = process.env.PORT || 3000
-const{
-	SESS_SECRET = process.env.SESSION_SECRET,
-	SESS_LIFETIME = TWO_HOURS,
-	SESS_NAME = 'sid',
-} = process.env
+
 
 // SET and USE
 app.set('view engine', 'pug')
@@ -41,7 +51,7 @@ app.use(cookieParser());
 mongoose.connect(process.env.DATABASE_URL,{useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false})
 const db = mongoose.connection
 db.on('error', error => console.error(error))
-db.once('open', () => console.log('Connected to Mongoose'))
+db.once('open', () => console.log('MONGOOSE OK!'))
 
 //mongos DB creater
 const schema = new mongoose.Schema({ username: 'string', password: 'string', email: 'string' });
@@ -49,8 +59,7 @@ let Account = mongoose.model('Account', schema);
 
 
 //Authentication Packages
-
-app.use(session({
+const sessionMiddleware = session({
 	key: 'user_sid',
 	secret: SESS_SECRET,
 	resave: false,
@@ -62,7 +71,9 @@ app.use(session({
 		maxAge: SESS_LIFETIME,
 		sameSite: true, //strict
 	}
-}))
+})
+
+app.use(sessionMiddleware)
 
 app.use((req, res, next) => {
     if (req.cookies.user_sid && !req.session.user) {
@@ -118,6 +129,11 @@ app.get('/profil', redirectLogin, (req, res) => {
   res.render('profil', { title: 'Hey', message: "hello", user: req.session.user, email: req.session.email })
 })
 
+//chat
+app.get('/Chat', redirectLogin, (req, res) => {
+
+	res.render('Chat', { title: 'Hey', message: "hello", user: req.session.user, email: req.session.email })
+})
 
 //RegisterPage
 app.get('/Register',redirectHome, (req, res) => {
@@ -144,10 +160,7 @@ app.get('/logout', redirectLogin, (req, res) => {
 
 //defoultPage
 app.get('/*', (req, res) => {
-	res.send(`
-			<h1>WOW </h1>
 
-		`)
 })
 
 //__________________________________________________________________
@@ -249,5 +262,95 @@ app.post('/Register', (req, res) => {
 		}
 })
 
+//chat
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+io.on('connection', socket =>{
+	 socket.request.session
+
+
+	socket.on('updateList', number =>{
+			const connectedUsers = Object.keys(io.sockets.connected).map(function(socketId) {
+			return { socket_username: io.sockets.connected[socketId].request.session.user };
+			});
+
+
+		const connecters = JSON.stringify(connectedUsers)
+		const connectem = JSON.parse(connecters)
+
+		//getting time
+		const now = new Date();
+		const epoch_millis = now.getTime();
+
+
+		var utcSeconds = epoch_millis;
+		var str = new Date(utcSeconds);
+
+		//convertsToString
+		var s = str.toString();
+
+		//formating data TIME
+		var timeS = s.substr(16,5);
+		var TDate = s.substr(0,15);
+
+		socket.emit('updateUsersList', {number:
+		io.engine.clientsCount, user: connectedUsers, time: timeS})
+
+	})
+
+
+	 socket.on('new-user', name =>{
+	 	socket.request.session.user = name
+	 	socket.broadcast.emit('user-connected', name)
+	 })
+
+
+	socket.on('send-chat-message', message =>{
+
+		const now = new Date();
+		const epoch_millis = now.getTime();
+		//console.log(epoch_millis)
+
+		var utcSeconds = epoch_millis;
+		var str = new Date(utcSeconds);
+
+		//convertsToString
+		var s = str.toString();
+
+		//formating data TIME
+		var timeS = s.substr(16,5);
+		var TDate = s.substr(0,15);
+
+		socket.broadcast.emit('chat-message', {message: message, name:
+		socket.request.session.user, time: timeS}) // broadcasting message
+	})
+
+
+	socket.on('disconnect', () =>{
+		socket.broadcast.emit('user-disconnected', socket.request.session.user)
+
+	 	//delete socket.request.session.user
+
+	})
+
+	socket.on('time', time =>{
+		const now = new Date();
+		const epoch_millis = now.getTime();
+		console.log(epoch_millis)
+		socket.emit('datime', {time: epoch_millis})
+	})
+
+	// socket.on('typing', (name) =>{
+	// 	socket.broadcast.emit('typing', name)
+	// })
+
+	// socket.on('reconnect', name =>{
+	// 	users[socket.id] = name
+	// 	socket.broadcast.emit('reconnect-user', name)
+	// })
+
+
+})
+
+
+app.listen(port, () => console.log(`SERVER listening on port ${port}!`))
