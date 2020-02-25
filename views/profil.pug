@@ -26,7 +26,9 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
       li.nav-item.active
         a.nav-link(href='/profil') Profil
       li.nav-item
-        a.nav-link.disabled(href='/Chat', tabindex='-1', aria-disabled='true') Chat
+        a.nav-link(href='/Chat', tabindex='-1') Chat
+      li.nav-item
+        a.nav-link.disabled(href='/Chat', tabindex='-1', aria-disabled='true') 
     div.form-inline.my-2.my-lg-0
       
       button.btn.btn-outline-success.my-2.my-sm-0(onclick="window.location.href='/logout'") Logout

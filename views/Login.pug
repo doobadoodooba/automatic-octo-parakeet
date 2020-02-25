@@ -32,9 +32,9 @@ body
                 p(style="font-size:30%;").text-danger#error
                 div.form-group
                   lable(for='username')
-                  input.form-control#username(type='text', class="form-control", name='username', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Username')
+                  input.form-control#username(type='text', class="form-control", name='username', aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Username' maxlength = "15")
                   lable(for='password')
-                  input.form-control#password(type='password', class="form-control" name='password' aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Password')
+                  input.form-control#password(type='password', class="form-control" name='password' aria-label='Default', aria-describedby='inputGroup-sizing-sm', placeholder='Password' maxlength = "35")
                   input.btn.btn-outline-success.my-2.my-sm-0(type='submit', value='sign in')
                 
       

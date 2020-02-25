@@ -6,6 +6,7 @@ const number = document.getElementById('user-list')
 const userOn = document.getElementById('userOn')
 const userName = document.getElementById('userName')
 const chatConteriner = document.getElementById('chatConteriner')
+const audio = document.getElementById('notifier')
 //const timeS = document.getElementById('time')
 //const feedback = document.getElementById('feedback')
 
@@ -23,10 +24,12 @@ socket.emit('new-user', name)
 socket.emit('updateList')
 socket.emit('datime')
 //time()
+
 //sending message___________________________________________________________
 socket.on('chat-message', data =>{
   //time()
   //feedback.innerHTML = ''
+  notif()
   appendMessage(`${data.name} ${data.time }
     ${data.message}`)
   //console.log(data)
@@ -129,3 +132,12 @@ function scroller(){
 //   //document.getElementById('headline').innerHTML = timeS;
 //   console.log(timeS)
 // }
+
+  function notif(){
+    console.log('sound played')
+    //  const audio = new Audio({
+    //   src: ["sounds/consolesoundmaybe.ogg"],
+    //   autoplay: true
+    // });
+    audio.play();
+  }

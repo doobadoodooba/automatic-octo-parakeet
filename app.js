@@ -147,6 +147,8 @@ app.get('/Login',redirectHome, (req, res) => {
 })
 
 
+
+
 // Logout
 app.get('/logout', redirectLogin, (req, res) => {
 	req.session.destroy(err =>{
@@ -168,7 +170,7 @@ app.get('/*', (req, res) => {
 
 //loginUser
 
-app.post('/Login', (req, res) => {
+app.post('/Login', (req, res, callback) => {
 
 try{
 	var username = req.body.username;
@@ -180,7 +182,7 @@ try{
 	 if (err) return handleError(err);
 
 	 if(!user){
-
+		 return
 		 //return res.status(401).json({ msg: "Wrong username" })
 		 console.log('LOGIN NOT FOUND ' + user)
 	 }else{
@@ -200,6 +202,7 @@ try{
  					 //return res.status(200).json({ msg: "Login success" })
  					 res.redirect('/home')
  			 } else {
+				 return
  					 //return res.status(401).json({ msg: "Invalid credencial" })
  			 }
  	 })
@@ -215,7 +218,7 @@ try{
 })
 
 //registerUser
-app.post('/Register', (req, res) => {
+app.post('/Register', (req, res, callback) => {
 
 		try{
 			//getsUserPAGE
@@ -226,7 +229,7 @@ app.post('/Register', (req, res) => {
 		 	 if (err) throw error
 
 		 	 if(user){
-
+				 return
 				 //UserIsExisting
 		 		 console.log('USER  : ' + user.username + ' ALREADY EXISTING')
 				}

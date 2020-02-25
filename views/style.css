@@ -53,16 +53,29 @@
 
 }
 
+
+
 .inputChat{
 	width:80%;
-	height: 35px;
-	border: 2px solid #eee;
+	height: 45px;
+
 	border-radius: 3px;
 	resize: none;
 	padding:10px;
 	word-break: break-word;
+	overflow: hidden;
+
+
 }
 
+#sender{
+	margin-left: 3px;
+
+	vertical-align: 1em;  /* add me */
+
+
+
+}
 
 #message-container{
 	width: : 40%;
