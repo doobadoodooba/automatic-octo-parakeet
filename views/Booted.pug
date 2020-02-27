@@ -1,0 +1,42 @@
+doctype html
+html
+  head
+
+   link(href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", rel="stylesheet", crossorigin="anonymous")
+   script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+   script(src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js")
+   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js", crossorigin="anonymous")
+   meta(name='viewport', content='width=device-width, initial-scale=1')
+  style
+   include style.css
+
+
+
+body
+nav.navbar.navbar-expand-lg.navbar-light.bg-light
+  button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarTogglerDemo03', aria-controls='navbarTogglerDemo03', aria-expanded='false', aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  a.navbar-brand(href='#') PuruPuru
+  #navbarTogglerDemo03.collapse.navbar-collapse
+    ul.navbar-nav.mr-auto.mt-2.mt-lg-0
+      li.nav-item.active
+        a.nav-link(href='/home')
+          | Home
+          span.sr-only (current)
+      li.nav-item
+        a.nav-link(href='/profil') Profil
+      li.nav-item
+        a.nav-link(href='/Chat', tabindex='-1') Chat
+      li.nav-item
+        a.nav-link.disabled(href='/Chat', tabindex='-1', aria-disabled='true')
+    div.form-inline.my-2.my-lg-0
+
+      button.btn.btn-outline-success.my-2.my-sm-0(onclick="window.location.href='/logout'") Logout
+
+div(class='jumbotron vertical-center')
+  div(class='pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center')
+    h1(class='text-center') Home
+    br
+  div(class='container')
+    p(class='') You have been booted from the chat!.
+    p(class='') You have signed into the chat from another window or device.

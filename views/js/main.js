@@ -1,8 +1,6 @@
 
 
 function clicked () {
-	//var db = "mongodb://localhost:27017/TestUserdb";
-
 
 	var user = document.getElementById('username');
 	var pass = document.getElementById('password');

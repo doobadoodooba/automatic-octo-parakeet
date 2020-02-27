@@ -46,6 +46,22 @@ app.use(flash())
 app.use(cookieParser());
 
 
+function getTime() {
+  //getting time
+  const now = new Date();
+  const epoch_millis = now.getTime();
+
+
+  var utcSeconds = epoch_millis;
+  var str = new Date(utcSeconds);
+
+  //convertsToString
+  var s = str.toString();
+
+  //formating data TIME
+  var timeS = s.substr(16,5);
+  return timeS
+}
 
 //mongoose
 mongoose.connect(process.env.DATABASE_URL,{useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false})
@@ -146,6 +162,11 @@ app.get('/Register',redirectHome, (req, res) => {
 //LoginPage
 app.get('/Login',redirectHome, (req, res) => {
   res.render('Login', { title: 'Hey', message: req.originalUrl })
+})
+
+//BootedPage
+app.get('/Booted', (req, res) => {
+  res.render('Booted')
 })
 
 
@@ -270,11 +291,7 @@ app.post('/Register', (req, res, callback) => {
 
 //chat
 
-
 io.on('connection', socket =>{
-	 //socket.request.session
-
-
 	if(!socket.request.session.email){
 		// kick em out they dont have cookies
 
@@ -282,104 +299,49 @@ io.on('connection', socket =>{
 		delete socket.request.session.user
 
 		io.sockets.emit('reload', {})
-		socket.broadcast.to('connection'). disconnect ()
-	}else{
-
-			if(socket.connected){
+		socket.broadcast.to('connection').disconnect()
+	} else {
 			// check whos in da house
 	 	 	console.log('\x1b[47m'+'\x1b[35m' + socket.request.session.user + ' : connected to chat ' + '\x1b[37m'+'\x1b[40m')
+      const connectedUsers = [];
+      Object.keys(io.sockets.connected).forEach((socketId) => {
+           // Here we iterate over all the connections to build a list of
+           // Connected users.  Because the user who is connecting will already
+           // be in this list we need to check the socket id.  If a socket id
+           // already exists for that username, we know the socket id is for
+           // an existing conneciton if they match usernames.
+           let userName = io.sockets.connected[socketId].request.session.user;
+           if(userName == socket.request.session.user) {
+             // socket.id is the new user connecting. socketId may or may not
+             // be the same new connection or an existing old connection.
+             if(socket.id != socketId) {
+               // This means the same user has tried to join twice. Give the existing connection
+               // The boot!
+               io.to(socketId).emit('booted', 'You joined the chat from another window or device.')
+               return
+             }
+           }
+           connectedUsers.push({ socket_username: io.sockets.connected[socketId].request.session.user })
+      });
+      // Let all the people know who's chatting! Including the new guy!
+      io.emit('updateUsersList', {
+        number: connectedUsers.length,
+        user: connectedUsers,
+        time: getTime()
+      })
+      // Tell the people already in the chat who just joined.
+      socket.broadcast.emit('user-connected', socket.request.session.user)
+	 	}
 
-	 	 }
+	socket.on('send-chat-message', message =>{
+		//send message
+		socket.broadcast.emit('chat-message', {message: message, name:
+		socket.request.session.user, time: getTime()}) // broadcasting message
+	})
 
-		 //console.log( io.sockets.sockets)
-		 //console.log(io.sockets.adapter.sids)
-
-
-		socket.on('updateList', number =>{
-
-				//user map
-				const connectedUsers = Object.keys(io.sockets.connected).map(function(socketId) {
-				return { socket_username: io.sockets.connected[socketId].request.session.user };
-				});
-
-
-			//getting time
-			const now = new Date();
-			const epoch_millis = now.getTime();
-
-
-			var utcSeconds = epoch_millis;
-			var str = new Date(utcSeconds);
-
-			//convertsToString
-			var s = str.toString();
-
-			//formating data TIME
-			var timeS = s.substr(16,5);
-			var TDate = s.substr(0,15);
-
-			//pushing
-			socket.emit('updateUsersList', {number:
-			io.engine.clientsCount, user: connectedUsers, time: timeS})
-
-		})
-
-
-		 socket.on('new-user', name =>{
-
-			 //get em a name
-		 	socket.request.session.user = name
-		 	socket.broadcast.emit('user-connected', name)
-		 })
-
-
-		socket.on('send-chat-message', message =>{
-
-			const now = new Date();
-			const epoch_millis = now.getTime();
-			//console.log(epoch_millis)
-
-			var utcSeconds = epoch_millis;
-			var str = new Date(utcSeconds);
-
-			//convertsToString
-			var s = str.toString();
-
-			//formating data TIME
-			var timeS = s.substr(16,5);
-			var TDate = s.substr(0,15);
-
-			//send message
-			socket.broadcast.emit('chat-message', {message: message, name:
-			socket.request.session.user, time: timeS}) // broadcasting message
-		})
-
-
-		socket.on('disconnect', () =>{
-			socket.broadcast.emit('user-disconnected', socket.request.session.user)
-
-		 	//delete socket.request.session.user
-
-		})
-
-		// socket.on('time', time =>{
-		// 	const now = new Date();
-		// 	const epoch_millis = now.getTime();
-		// 	//console.log(epoch_millis)
-		// 	socket.emit('datime', {time: epoch_millis})
-		// })
-
-		// socket.on('typing', (name) =>{
-		// 	socket.broadcast.emit('typing', name)
-		// })
-
-		// socket.on('reconnect', name =>{
-		// 	users[socket.id] = name
-		// 	socket.broadcast.emit('reconnect-user', name)
-		// })
-	}
-
-
+	socket.on('disconnect', () =>{
+		socket.broadcast.emit('user-disconnected', socket.request.session.user)
+	})
 })
 
 console.log('\x1b[41m'+'\x1b[41m\x1b[1m\x1b[36m%s\x1b[0m','SERVER START')

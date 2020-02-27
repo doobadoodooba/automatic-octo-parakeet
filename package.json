@@ -1,14 +1,13 @@
 {
   "name": "3_htmlo",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "./app.js",
   "scripts": {
     "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "Express": "^3.0.1",
     "bcrypt": "^3.0.8",
     "connect-redis": "^4.0.4",
     "cookie-parser": "^1.4.4",

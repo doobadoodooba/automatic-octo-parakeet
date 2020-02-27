@@ -7,22 +7,10 @@ const userOn = document.getElementById('userOn')
 const userName = document.getElementById('userName')
 const chatConteriner = document.getElementById('chatConteriner')
 const audio = document.getElementById('notifier')
-//const timeS = document.getElementById('time')
-//const feedback = document.getElementById('feedback')
-
-// document.getElementById("send-container").onkeypress = function(e) {
-//   var key = e.charCode || e.keyCode || 0;
-//   if (key == 13) {
-//     e.preventDefault();
-//   }
-// }
+const socket = io();
 
 // on chat enter___________________________________________________________
 appendMessage('You joined')
-socket.emit('new-user', name)
-socket.emit('updateList')
-socket.emit('datime')
-//time()
 
 //sending message___________________________________________________________
 socket.on('chat-message', data =>{
@@ -39,8 +27,6 @@ socket.on('chat-message', data =>{
  socket.on('user-connected', name =>{
    appendMessage(`${name} is connected`)
    scroller()
-   //time()
-   socket.emit('updateList')
  })
 
 // user disconects__________________________________________________________
@@ -48,22 +34,22 @@ socket.on('chat-message', data =>{
    if (!name){
 
    }else {
-     socket.emit('updateList')
      appendMessage(`${name} disconnected`)
      scroller()
-     //time()
    }
  })
 
 //updating online users______________________________________________________
  socket.on('updateUsersList',number =>{
    const connecters = JSON.stringify(number.user)
-
-   //const regex = "socket_username"
-   result = connecters.replace(/socket_username/g, " ");
-   daresult = result.replace(/[.*+?^"":${}()|[\]\\]/g, " ")
+   const result = connecters.replace(/socket_username/g, " ");
+   const daresult = result.replace(/[.*+?^"":${}()|[\]\\]/g, " ")
    const text = document.getElementById("userOn").innerHTML = ('Online : ' + number.number + ' &nbsp'+'Users :' + daresult)
-   //const dausers = document.getElementById("userName").innerHTML = ('Online ' + daresult)
+ })
+
+ // booted
+ socket.on('booted', reason => {
+     window.location.replace("/Booted")
  })
 
 //Reload_____________________________________________________________________
@@ -135,11 +121,11 @@ function scroller(){
 //   console.log(timeS)
 // }
 
-  function notif(){
-    console.log('sound played')
-    //  const audio = new Audio({
-    //   src: ["sounds/consolesoundmaybe.ogg"],
-    //   autoplay: true
-    // });
-    audio.play();
-  }
+function notif(){
+console.log('sound played')
+//  const audio = new Audio({
+//   src: ["sounds/consolesoundmaybe.ogg"],
+//   autoplay: true
+// });
+audio.play();
+}
