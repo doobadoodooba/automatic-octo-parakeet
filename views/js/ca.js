@@ -10,7 +10,6 @@ const audio = document.getElementById('notifier')
 //const timeS = document.getElementById('time')
 //const feedback = document.getElementById('feedback')
 
-
 // document.getElementById("send-container").onkeypress = function(e) {
 //   var key = e.charCode || e.keyCode || 0;
 //   if (key == 13) {
@@ -67,7 +66,10 @@ socket.on('chat-message', data =>{
    //const dausers = document.getElementById("userName").innerHTML = ('Online ' + daresult)
  })
 
-
+//Reload_____________________________________________________________________
+ socket.on('reload', function (data) {
+    location.reload();
+ });
  // socket.on('typing', (name) =>{
  //   feedback.innerText = 'Someone is typing a message...'
  //   console.log(feedback)

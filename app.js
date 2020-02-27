@@ -25,7 +25,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-http.listen(port2, () => console.log(`SOCKET IO listening on port ${port2}!`))
+http.listen(port2, () => console.log('\x1b[1m\x1b[35m%s\x1b[0m', `SOCKET IO listening on port`,'\x1b[1m\x1b[33m',` ${port2}!`))
 
 //adding  sessionmiddleware
 io.use(function(socket, next) {
@@ -51,7 +51,7 @@ app.use(cookieParser());
 mongoose.connect(process.env.DATABASE_URL,{useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false})
 const db = mongoose.connection
 db.on('error', error => console.error(error))
-db.once('open', () => console.log('MONGOOSE OK'))
+db.once('open', () => console.log('\x1b[32m%s\x1b[0m', 'MONGOOSE : ','\x1b[1m\x1b[33m' + 'true' + '\x1b[37m'))
 
 //mongos DB creater
 const schema = new mongoose.Schema({ username: 'string', password: 'string', email: 'string' });
@@ -103,6 +103,8 @@ const redirectHome = (req, res, next) =>{
 	}
 }
 
+
+
 //__________________________________________________________________
 //linking
 
@@ -113,7 +115,7 @@ app.get('/api/time', (req, res) => {
 
 //timer page
 app.get('/page2', redirectLogin, (req, res) => {
-	console.log(req.isAuthenticated())
+	//console.log(req.isAuthenticated())
   res.render('page2', { title: 'Hey', message: "hello" })
 })
 
@@ -184,14 +186,14 @@ try{
 	 if(!user){
 		 return
 		 //return res.status(401).json({ msg: "Wrong username" })
-		 console.log('LOGIN NOT FOUND ' + user)
+		 //console.log('\x1b[43m'+'LOGIN NOT FOUND ' + user)
 	 }else{
 
 		 let daEmail = user.email
 		 let daUser = user.username
 		 req.session.user = daUser;
 
-		 console.log(' Email : ' + daEmail)
+		 //console.log(' Email : ' + daEmail)
 		 req.session.email = daEmail;
 
 		 // password decrypting
@@ -210,7 +212,7 @@ try{
 })
 } catch(e){
 	//res.redirect('/Login')
-	console.log('LOGIN FAIL ')
+	console.log('\x1b[41m'+'LOGIN FAIL ')
 	console.log(e);
 }
 
@@ -231,7 +233,7 @@ app.post('/Register', (req, res, callback) => {
 		 	 if(user){
 				 return
 				 //UserIsExisting
-		 		 console.log('USER  : ' + user.username + ' ALREADY EXISTING')
+		 		 //console.log('USER  : ' + user.username + ' ALREADY EXISTING')
 				}
 
 				if(!user){
@@ -261,7 +263,7 @@ app.post('/Register', (req, res, callback) => {
 		})
 		} catch (e){
 			return res.status(200).json({ msg: "REGISTRATION FAIL" })
-			console.log('register FAIL')
+			console.log('\x1b[41m' + 'REGISTRATION FAIL'+ '\x1b[37m'+'\x1b[40m')
 			console.log(e);
 		}
 })
@@ -270,91 +272,115 @@ app.post('/Register', (req, res, callback) => {
 
 
 io.on('connection', socket =>{
-	 socket.request.session
+	 //socket.request.session
 
 
-	socket.on('updateList', number =>{
-			const connectedUsers = Object.keys(io.sockets.connected).map(function(socketId) {
-			return { socket_username: io.sockets.connected[socketId].request.session.user };
-			});
+	if(!socket.request.session.email){
+		// kick em out they dont have cookies
+
+		delete socket.request.session.id
+		delete socket.request.session.user
+
+		io.sockets.emit('reload', {})
+		socket.broadcast.to('connection'). disconnect ()
+	}else{
+
+			if(socket.connected){
+			// check whos in da house
+	 	 	console.log('\x1b[47m'+'\x1b[35m' + socket.request.session.user + ' : connected to chat ' + '\x1b[37m'+'\x1b[40m')
+
+	 	 }
+
+		 //console.log( io.sockets.sockets)
+		 //console.log(io.sockets.adapter.sids)
 
 
-		const connecters = JSON.stringify(connectedUsers)
-		const connectem = JSON.parse(connecters)
+		socket.on('updateList', number =>{
 
-		//getting time
-		const now = new Date();
-		const epoch_millis = now.getTime();
-
-
-		var utcSeconds = epoch_millis;
-		var str = new Date(utcSeconds);
-
-		//convertsToString
-		var s = str.toString();
-
-		//formating data TIME
-		var timeS = s.substr(16,5);
-		var TDate = s.substr(0,15);
-
-		socket.emit('updateUsersList', {number:
-		io.engine.clientsCount, user: connectedUsers, time: timeS})
-
-	})
+				//user map
+				const connectedUsers = Object.keys(io.sockets.connected).map(function(socketId) {
+				return { socket_username: io.sockets.connected[socketId].request.session.user };
+				});
 
 
-	 socket.on('new-user', name =>{
-	 	socket.request.session.user = name
-	 	socket.broadcast.emit('user-connected', name)
-	 })
+			//getting time
+			const now = new Date();
+			const epoch_millis = now.getTime();
 
 
-	socket.on('send-chat-message', message =>{
+			var utcSeconds = epoch_millis;
+			var str = new Date(utcSeconds);
 
-		const now = new Date();
-		const epoch_millis = now.getTime();
-		//console.log(epoch_millis)
+			//convertsToString
+			var s = str.toString();
 
-		var utcSeconds = epoch_millis;
-		var str = new Date(utcSeconds);
+			//formating data TIME
+			var timeS = s.substr(16,5);
+			var TDate = s.substr(0,15);
 
-		//convertsToString
-		var s = str.toString();
+			//pushing
+			socket.emit('updateUsersList', {number:
+			io.engine.clientsCount, user: connectedUsers, time: timeS})
 
-		//formating data TIME
-		var timeS = s.substr(16,5);
-		var TDate = s.substr(0,15);
-
-		socket.broadcast.emit('chat-message', {message: message, name:
-		socket.request.session.user, time: timeS}) // broadcasting message
-	})
+		})
 
 
-	socket.on('disconnect', () =>{
-		socket.broadcast.emit('user-disconnected', socket.request.session.user)
+		 socket.on('new-user', name =>{
 
-	 	//delete socket.request.session.user
+			 //get em a name
+		 	socket.request.session.user = name
+		 	socket.broadcast.emit('user-connected', name)
+		 })
 
-	})
 
-	socket.on('time', time =>{
-		const now = new Date();
-		const epoch_millis = now.getTime();
-		console.log(epoch_millis)
-		socket.emit('datime', {time: epoch_millis})
-	})
+		socket.on('send-chat-message', message =>{
 
-	// socket.on('typing', (name) =>{
-	// 	socket.broadcast.emit('typing', name)
-	// })
+			const now = new Date();
+			const epoch_millis = now.getTime();
+			//console.log(epoch_millis)
 
-	// socket.on('reconnect', name =>{
-	// 	users[socket.id] = name
-	// 	socket.broadcast.emit('reconnect-user', name)
-	// })
+			var utcSeconds = epoch_millis;
+			var str = new Date(utcSeconds);
+
+			//convertsToString
+			var s = str.toString();
+
+			//formating data TIME
+			var timeS = s.substr(16,5);
+			var TDate = s.substr(0,15);
+
+			//send message
+			socket.broadcast.emit('chat-message', {message: message, name:
+			socket.request.session.user, time: timeS}) // broadcasting message
+		})
+
+
+		socket.on('disconnect', () =>{
+			socket.broadcast.emit('user-disconnected', socket.request.session.user)
+
+		 	//delete socket.request.session.user
+
+		})
+
+		// socket.on('time', time =>{
+		// 	const now = new Date();
+		// 	const epoch_millis = now.getTime();
+		// 	//console.log(epoch_millis)
+		// 	socket.emit('datime', {time: epoch_millis})
+		// })
+
+		// socket.on('typing', (name) =>{
+		// 	socket.broadcast.emit('typing', name)
+		// })
+
+		// socket.on('reconnect', name =>{
+		// 	users[socket.id] = name
+		// 	socket.broadcast.emit('reconnect-user', name)
+		// })
+	}
 
 
 })
 
-
-app.listen(port, () => console.log(`SERVER listening on port ${port}!`))
+console.log('\x1b[41m'+'\x1b[41m\x1b[1m\x1b[36m%s\x1b[0m','SERVER START')
+app.listen(port, () => console.log('\x1b[35m%s\x1b[0m', `SERVER listening on port`, '\x1b[1m\x1b[33m', ` ${port}!`))
